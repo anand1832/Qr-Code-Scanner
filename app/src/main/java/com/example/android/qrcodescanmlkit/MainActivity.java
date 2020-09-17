@@ -106,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void bindPreview(ProcessCameraProvider cameraProvider) {
-        preview = new Preview.Builder().build();
+        preview = new Preview.Builder().setTargetResolution(new Size(360,480)).build();
         preview.setSurfaceProvider(cameraView.createSurfaceProvider());
         cameraSelector = new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
 
-        imageAnalysis=new ImageAnalysis.Builder().setTargetResolution(new Size(1280,720)).setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).build();
+        imageAnalysis=new ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).build();
         imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this),new YourAnalyzer());
         cameraProvider.unbindAll();
         camera = cameraProvider.bindToLifecycle(this,cameraSelector,preview,imageAnalysis);
@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
                             public void onSuccess(List<Barcode> barcodes) {
                                 // Task completed successfully
                                 // ...
-                                Toast.makeText(getApplicationContext(),"Success",Toast.LENGTH_SHORT);
                                 for (Barcode barcode: barcodes) {
                                     Rect bounds = barcode.getBoundingBox();
                                     Point[] corners = barcode.getCornerPoints();
